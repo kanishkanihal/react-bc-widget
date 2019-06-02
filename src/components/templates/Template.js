@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
@@ -58,24 +58,57 @@ const rowsx = [
 ];
 ////////////////////////////
 const Template = props => {
+  //States
   const [mode, setMode] = useState(0);
-  const [rows, setRows] = useState(
-    rowsx.sort((a, b) => (a.calories < b.calories ? -1 : 1))
-  );
+  const [rows, setRows] = useState([]);
   const [id, setId] = useState(0);
   const [formData, setFormData] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
+  //Paginations action.
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
-
+  //Paginations action.
   const handleChangeRowsPerPage = event => {
     setRowsPerPage(parseInt(event.target.value, 10));
   };
+  //Event on clicking "New Template" button.
+  const templateNew = () => {
+    setMode(1);
+  };
+  //Event on clicking a "Delete" link.
+  const templateDelete = id => {
+    deleteTemplate(id);
+  };
+  //Event on clicking a "Edit" link.
+  const templateEdit = id => {
+    setMode(2);
+    setId(id);
+    setFormData(rows.find(row => row.id === id));
+  };
 
-  const TemplateSearch = event => {
+  //Action on clicking "New Template" button.
+  const addTemplate = value => {
+    rows.push(createData(value.name, value.template));
+    setRows(rows);
+  };
+  //Action on clicking a "Delete" link.
+  const deleteTemplate = value => {
+    let objIndex = rows.findIndex(obj => obj.id === value);
+    rows.splice(objIndex, 1);
+    setRows([...rows]);
+  };
+  //Action on clicking a "edit" link.
+  const editTemplate = value => {
+    let objIndex = rows.findIndex(obj => obj.id === value.id);
+    rows[objIndex] = value;
+    setMode(0);
+    setRows(rowsx.sort((a, b) => (a.calories < b.calories ? -1 : 1)));
+  };
+  //Action on typing on "Search Template" area.
+  const searchTemplate = event => {
     if (event.target.value.length > 2) {
       var filterString = new RegExp(event.target.value, "g");
 
@@ -87,47 +120,23 @@ const Template = props => {
       });
       setRows(filters);
     } else {
-      setRows(rows);
+      setRows([...rowsx]);
     }
   };
-  const templateNew = () => {
-    setMode(1);
-  };
-  const templateDelete = id => {
-    deleteTemplate(id);
-  };
-  const templateEdit = id => {
-    setMode(2);
-    setId(id);
-    setFormData(rows.find(row => row.id === id));
-  };
-
+  //Action on clicking a "Back" link.
   const loadHome = () => {
     setMode(0);
-  };
-
-  const addTemplate = value => {
-    debugger;
-    rows.push(createData(value.name, value.template));
-    setRows(rows);
-  };
-
-  const deleteTemplate = value => {
-    let objIndex = rows.findIndex(obj => obj.id === value);
-    rows.splice(objIndex, 1);
-    setRows([...rows]);
-  };
-
-  const editTemplate = value => {
-    let objIndex = rows.findIndex(obj => obj.id === value.id);
-    rows[objIndex] = value;
-    setMode(0);
-    setRows(rows);
   };
   const { classes } = props;
 
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+
+  useEffect(() => {
+    // Update the document title using the browser API
+    debugger;
+    setRows([...rowsx]);
+  });
 
   if (mode === 0) {
     return (
@@ -153,7 +162,7 @@ const Template = props => {
               type="search"
               className={classes.textField}
               margin="dense"
-              onChange={TemplateSearch}
+              onChange={searchTemplate}
             />
           </Grid>
         </Grid>
