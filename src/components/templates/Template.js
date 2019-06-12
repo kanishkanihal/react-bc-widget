@@ -65,7 +65,16 @@ const Template = props => {
   const [formData, setFormData] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-
+  //Effect - Initial loading.
+  useEffect(() => {
+    setRows(rowsx);
+    console.log("1. Rows constructt");
+    return () => console.log("1. Rows Unmount");
+  }, []);
+  //Effect - On changing rows.
+  useEffect(() => {
+    console.log("3. Rows on change");
+  }, [rows]);
   //Paginations action.
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -89,23 +98,23 @@ const Template = props => {
     setFormData(rows.find(row => row.id === id));
   };
 
-  //Action on clicking "New Template" button.
+  //Prop for NewTemplate - Action on clicking "New Template" button.
   const addTemplate = value => {
     rows.push(createData(value.name, value.template));
-    setRows(rows);
+    setRows([...rows]);
   };
-  //Action on clicking a "Delete" link.
+  //Prop for Delete - Action on clicking a "Delete" link.
   const deleteTemplate = value => {
     let objIndex = rows.findIndex(obj => obj.id === value);
     rows.splice(objIndex, 1);
     setRows([...rows]);
   };
-  //Action on clicking a "edit" link.
+  //Prop for Edit Template - Action on clicking a "edit" link.
   const editTemplate = value => {
     let objIndex = rows.findIndex(obj => obj.id === value.id);
     rows[objIndex] = value;
     setMode(0);
-    setRows(rowsx.sort((a, b) => (a.calories < b.calories ? -1 : 1)));
+    setRows([...rows]);
   };
   //Action on typing on "Search Template" area.
   const searchTemplate = event => {
@@ -118,7 +127,7 @@ const Template = props => {
           filters.push(row);
         }
       });
-      setRows(filters);
+      setRows([...filters]);
     } else {
       setRows([...rowsx]);
     }
@@ -131,12 +140,6 @@ const Template = props => {
 
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
-
-  useEffect(() => {
-    // Update the document title using the browser API
-    debugger;
-    setRows([...rowsx]);
-  });
 
   if (mode === 0) {
     return (
@@ -237,19 +240,25 @@ const Template = props => {
   } else if (mode === 1) {
     return (
       <TemplateNew
-        loadHome={loadHome.bind(this)}
-        addTemplate={addTemplate.bind(this)}
+        loadHome={() => {
+          loadHome();
+        }}
+        addTemplate={e => {
+          addTemplate(e);
+        }}
       />
     );
   } else if (mode === 2) {
-    console.log(props.editRow);
-    debugger;
     return (
       <TemplateEdit
-        loadHome={loadHome.bind(this)}
+        loadHome={() => {
+          loadHome();
+        }}
         formData={formData}
         id={id}
-        editTemplate={editTemplate.bind(this)}
+        editTemplate={e => {
+          editTemplate(e);
+        }}
       />
     );
   }

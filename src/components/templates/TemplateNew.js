@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import Button from "@material-ui/core/Button";
 import FormControl from "@material-ui/core/FormControl";
@@ -20,6 +20,10 @@ const TemplateNew = props => {
     name: "",
     template: ""
   });
+  //Effect
+  useEffect(() => {
+    console.log("Kana New");
+  }, [props.addTemplate]);
   //Text field handle Change
   const handleChange = name => event => {
     setValues({ ...values, [name]: event.target.value });

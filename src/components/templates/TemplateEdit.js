@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import Button from "@material-ui/core/Button";
 import FormControl from "@material-ui/core/FormControl";
@@ -18,10 +18,16 @@ const TemplateEdit = props => {
   const classes = useStyles();
   //States
   const [values, setValues] = React.useState({
-    id: props.formData.id,
-    name: props.formData.name,
-    template: props.formData.template
+    id: 0,
+    name: "",
+    template: ""
   });
+  //Effect
+  useEffect(() => {
+    setValues(props.formData);
+    console.log("Edit form");
+  }, []);
+
   //Text field handle Change
   const handleChange = name => event => {
     setValues({ ...values, [name]: event.target.value });
@@ -81,7 +87,7 @@ const TemplateEdit = props => {
             placeholder="Template"
             multiline
             rows="4"
-            defaultValue={values.template}
+            value={values.template}
             onChange={handleChange("template")}
             className={classes.textField}
             fullWidth
