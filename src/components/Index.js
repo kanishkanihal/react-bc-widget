@@ -18,6 +18,7 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import InboxIcon from "@material-ui/icons/Inbox";
 import MailIcon from "@material-ui/icons/Mail";
+import SendIcon from "@material-ui/icons/Send";
 
 import { styles } from "./core/styles";
 
@@ -83,7 +84,7 @@ class MiniDrawer extends React.Component {
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" color="inherit" noWrap>
-              Kanaslab Bigcommerce Widget Manager
+              Bigcommerce Widget Manager
             </Typography>
           </Toolbar>
         </AppBar>
@@ -130,8 +131,7 @@ class MiniDrawer extends React.Component {
             </ListItem>
             <ListItem button key={`Widget`} onClick={() => this.changeItem(3)}>
               <ListItemIcon>
-                {" "}
-                <MailIcon />
+                <SendIcon />
               </ListItemIcon>
               <ListItemText primary={`Widget`} />
             </ListItem>
@@ -147,7 +147,6 @@ class MiniDrawer extends React.Component {
             </ListItem>
             <ListItem button key={`Layout`} onClick={() => this.changeItem(5)}>
               <ListItemIcon>
-                {" "}
                 <MailIcon />
               </ListItemIcon>
               <ListItemText primary={`Layout`} />
